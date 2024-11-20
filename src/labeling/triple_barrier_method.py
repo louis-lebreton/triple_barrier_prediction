@@ -109,23 +109,24 @@ class TripleBarrierMethod:
         
         :param date: The date for which to plot the barriers
         """
-        bottom_rectangle = self.df_barrier_price.loc[date, 'lower_barrier_price']
-        top_rectangle = self.df_barrier_price.loc[date, 'upper_barrier_price']
-        y_value = self.df_barrier_price.loc[date, 'target_price']
+        
+        bottom_rectangle = self.df_barrier_price.loc[pd.to_datetime(date), 'lower_barrier_price']
+        top_rectangle = self.df_barrier_price.loc[pd.to_datetime(date), 'upper_barrier_price']
+        y_value = self.df_barrier_price.loc[pd.to_datetime(date), 'target_price']
 
         xmin = pd.to_datetime(date)
         xmax = xmin + pd.Timedelta(days=self.time_barrier)
-
+     
         plt.figure(figsize=(10, 6))
         # Price
-        plt.plot(self.df_barrier_price.index, self.df_barrier_price['target_price'], label='Target Price', color='#382054')
+        plt.plot(pd.to_datetime(self.df_barrier_price.index), self.df_barrier_price['target_price'], label='Target Price', color='#382054')
         # Horizontal barriers
-        plt.hlines(y=top_rectangle, xmin=xmin, xmax=xmax, colors='green', label=f'Upper barrier')
+        plt.hlines(y=top_rectangle, xmin=xmin, xmax=xmax, colors='green', label='Upper barrier')
         plt.hlines(y=y_value, xmin=xmin, xmax=xmax, colors='black', linestyles='dashed')
-        plt.hlines(y=bottom_rectangle, xmin=xmin, xmax=xmax, colors='red', label=f'Lower barrier')
+        plt.hlines(y=bottom_rectangle, xmin=xmin, xmax=xmax, colors='red', label='Lower barrier')
         # Vertical barriers
         plt.vlines(x=xmin, ymin=bottom_rectangle, ymax=top_rectangle, colors='grey', linestyles='dashed')
-        plt.vlines(x=xmax, ymin=bottom_rectangle, ymax=top_rectangle, colors='blue', label=f'Vertical barrier')
+        plt.vlines(x=xmax, ymin=bottom_rectangle, ymax=top_rectangle, colors='blue', label='Vertical barrier')
 
         plt.legend()
         plt.title(title)
@@ -142,7 +143,7 @@ if __name__ == '__main__':
     # test on Apple stock value
     data_daily = yf.download('AAPL', start='2020-01-01', end='2024-12-31', interval='1d')
     target_price = data_daily['Close']
-
+  
     # barrier settings
     lower_barrier = -0.10
     upper_barrier = 0.10
@@ -150,5 +151,4 @@ if __name__ == '__main__':
     tbm = TripleBarrierMethod(target_price, lower_barrier=lower_barrier, upper_barrier=upper_barrier, time_barrier=time_barrier)
     df_labeled = tbm.label_data()
     tbm.plot_labels(colors=['#ff0000', '#7945d9', '#0fff00'], title='Labeled Price Data')
-    tbm.plot_square(date='2022-01-07 00:00:00+00:00', title='Triple-Barrier square exemple')
-
+    tbm.plot_square(date='2023-02-08 00:00:00', title='Triple-Barrier square exemple')

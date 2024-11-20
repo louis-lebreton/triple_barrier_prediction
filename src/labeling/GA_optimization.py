@@ -7,8 +7,9 @@ import random
 import numpy as np
 from deap import base, creator, tools, algorithms
 import yfinance as yf
-from triple_barrier_method import TripleBarrierMethod
-from equity_strategy import EquityStrategy
+
+from src.labeling.triple_barrier_method import TripleBarrierMethod
+from src.labeling.equity_strategy import EquityStrategy
 
 # test on a stock value
 data_daily = yf.download('AAPL', start='2020-01-01', end='2024-12-31', interval='1d')
@@ -77,8 +78,8 @@ toolbox.register("mutate", tools.mutGaussian, mu=0, sigma=1, indpb=0.2) # mutati
 toolbox.register("select", tools.selTournament, tournsize=5) # selection / 5 individuals chosen
 
 # genetic algorithm hyperparameters
-population_size = 20
-generations = 5
+population_size = 50
+generations = 20
 crossover_probability = 0.7
 mutation_probability = 0.2
 
@@ -87,7 +88,7 @@ population = toolbox.population(n=population_size)
 
 # compute genetic algorithm
 for generation in range(generations):
-    print(f"{'-'*30} Generation {generation + 1}/{generations} {'-'*30}\n")
+    print(f"\n{'-'*40} Generation {generation + 1}/{generations} {'-'*40}\n")
     offspring = algorithms.varAnd(population, toolbox, cxpb=crossover_probability, mutpb=mutation_probability)
     fits = toolbox.map(toolbox.evaluate, offspring)
 
@@ -111,5 +112,6 @@ print("best fitness:", best_fitness)
 tbm = TripleBarrierMethod(target_price, lower_barrier=best_individual[0], upper_barrier=best_individual[1], time_barrier=int(best_individual[2]))
 df_labeled = tbm.label_data()
 tbm.plot_labels(colors=['#ff0000', '#7945d9', '#0fff00'], title='Labeled Price Data')
-tbm.plot_square(date='2022-01-07 00:00:00+00:00', title='Triple-Barrier square exemple')
+tbm.plot_square(date='2023-02-08 00:00:00', title='Triple-Barrier square exemple')
 
+df_labeled.to_csv('data/df_labeled.csv', sep=',', index=True)

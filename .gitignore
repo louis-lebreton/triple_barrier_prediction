@@ -1,0 +1,7 @@
+.vscode
+.venv
+__pycache__
+TDL.txt
+src/labeling/.venv_labeling
+src/labeling/.venv_predict
+catboost_info
