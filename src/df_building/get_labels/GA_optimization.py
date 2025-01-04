@@ -8,8 +8,8 @@ import numpy as np
 from deap import base, creator, tools, algorithms
 import yfinance as yf
 
-from src.labeling.triple_barrier_method import TripleBarrierMethod
-from src.labeling.equity_strategy import EquityStrategy
+from triple_barrier_method import TripleBarrierMethod
+from equity_strategy import EquityStrategy
 
 # test on a stock value
 data_daily = yf.download('AAPL', start='2020-01-01', end='2024-12-31', interval='1d')

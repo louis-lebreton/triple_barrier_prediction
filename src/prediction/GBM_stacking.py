@@ -1,5 +1,5 @@
-
 """
+@author: Louis Lebreton
 GBMs stacking
 """
 
@@ -78,9 +78,6 @@ class GBMStacking(BaseEstimator, ClassifierMixin):
         if self.xgboost_model is not None:
             meta_features.append(self.xgboost_model.predict_proba(X))
         
-        print(meta_features)
-        print('-')
-        print(np.hstack(meta_features))
         return np.hstack(meta_features)
 
 
@@ -91,7 +88,7 @@ if __name__ == '__main__':
     # temporaire
     df[df['label'] == -1]  = 2
 
-    GBM_stacking = GBMStacking(models_to_use=('catboost', 'xgboost'))
+    GBM_stacking = GBMStacking(models_to_use=('catboost', 'xgboost','lightbgm'))
     GBM_stacking.fit(df[['lower_barrier_price', 'upper_barrier_price']], df['label'])
     predictions = GBM_stacking.predict(df[['lower_barrier_price', 'upper_barrier_price']])
     
