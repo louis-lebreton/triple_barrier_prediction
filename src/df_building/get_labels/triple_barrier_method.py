@@ -1,4 +1,5 @@
 """
+@author: Louis Lebreton
 Triple-barrier method
 """
 

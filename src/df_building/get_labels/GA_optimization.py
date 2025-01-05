@@ -1,5 +1,5 @@
-
 """
+@author: Louis Lebreton
 Genetic Algorithm optimization
 """
 
@@ -14,8 +14,6 @@ from equity_strategy import EquityStrategy
 # test on a stock value
 data_daily = yf.download('AAPL', start='2020-01-01', end='2024-12-31', interval='1d')
 target_price = data_daily['Close']
-
-## Optimization ============================================================================================================
 
 def evaluate_individual(individual)-> tuple:
     """

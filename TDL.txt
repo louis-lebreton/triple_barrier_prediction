@@ -1,7 +1,0 @@
-- gérer le problème des paramètres int ou float
-- incorporer l'erreur  de prédiction dans la fitness function
-- afficher les meilleurs individuals à chaque génération avec la fitness value
-- faire une classe qui permet de faire le stacking entre 7 cas : CalixBoost, 3 paires.
-- faire entrainenment xgboost, calixboost et catboost avec opti bayesienne
-- scraper les données
-- push le code sur un repo

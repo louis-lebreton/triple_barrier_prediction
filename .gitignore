@@ -4,6 +4,6 @@ __pycache__
 TDL.txt
 src/labeling/.venv_labeling
 src/labeling/.venv_predict
-catboost_info
+catboost_info/
 .env
-
+TDL.txt
