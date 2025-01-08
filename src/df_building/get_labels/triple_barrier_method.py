@@ -13,7 +13,18 @@ from dataclasses import dataclass, field
 @dataclass
 class TripleBarrierMethod:
     """
-    
+    implements the Triple Barrier Method for labeling financial time series data.
+
+    hit an upper barrier (label = 1), a lower barrier (label = -1), or neither (label = 0) 
+    within a specified time frame.
+
+    Attributes:
+        target_price (pd.Series): time series of target prices to analyze
+        lower_barrier (float): relative percentage change defining the lower barrier
+        upper_barrier (float): relative percentage change defining the upper barrier
+        time_barrier (int): Time limit (in terms of steps) to check for barrier crossing
+        df_barrier_price (pd.DataFrame): df initialized post-construction, containing the target prices,
+                                         calculated upper and lower barrier prices, and the labels
     """
     target_price: pd.Series
     lower_barrier: float
@@ -153,3 +164,4 @@ if __name__ == '__main__':
     df_labeled = tbm.label_data()
     tbm.plot_labels(colors=['#ff0000', '#7945d9', '#0fff00'], title='Labeled Price Data')
     tbm.plot_square(date='2023-02-08 00:00:00', title='Triple-Barrier square exemple')
+    

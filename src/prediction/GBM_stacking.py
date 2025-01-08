@@ -15,80 +15,88 @@ from xgboost import XGBClassifier
 
 class GBMStacking(BaseEstimator, ClassifierMixin):
     """
-    Stacking of GBMs with optimal hyperparameters (CatBoost, LightGBM, XGBoost)
-    Example usage:
-        - models_to_use=('catboost', 'xgboost')
-        - models_to_use=('catboost', 'lightgbm', 'xgboost')
+    stacking de modeles gbm avec une regression logistique comme metaclassifier
+
+    Args :
+    - models_to_use : tuple contenant les noms des gbms à utiliser
+    - catboost_parameters : dictionnaire des hyperparamètres  catboost
+    - lightgbm_parameters : dictionnaire des hyperparamètres lightgbm
+    - xgboost_parameters : dictionnaire des hyperparamètres  xgboost
+    - logistic_parameters : dictionnaire des hyperparamètres regression logistique
+
+    Return :
+    - une instance entrainée du modele gbmstacking
     """
-    def __init__(self, models_to_use=('catboost', 'lightgbm', 'xgboost'), random_state=999):
-        if len(models_to_use) < 2 or len(models_to_use) > 3:
-            raise ValueError("It's a stacking of 2 or 3 differents GBM models")
+    def __init__(self, models_to_use=('catboost', 'lightgbm', 'xgboost'),
+                 catboost_parameters={}, lightgbm_parameters={}, xgboost_parameters={}, 
+                 logistic_regression_parameters={}, random_state=999):
         self.models_to_use = models_to_use
+        self.catboost_parameters = catboost_parameters
+        self.lightgbm_parameters = lightgbm_parameters
+        self.xgboost_parameters = xgboost_parameters
+        self.logistic_regression_parameters = logistic_regression_parameters
         self.random_state = random_state
-        self.catboost_model = None
-        self.lightgbm_model = None
-        self.xgboost_model = None
-        self.meta_classifier = None
+        self.models = {}
+        self.meta_classifier = LogisticRegression(**self.logistic_regression_parameters)
 
     def fit(self, X, y):
         X, y = check_X_y(X, y)
-        
-        # fit the base models with externals hyperparameters
-        if 'catboost' in self.models_to_use:
-            self.catboost_model = CatBoostClassifier(iterations=500, learning_rate=0.1, depth=6, verbose=0, random_state=self.random_state)
-            self.catboost_model.fit(X, y)
+        # modeles
+        model_classes = {
+            'catboost': CatBoostClassifier,
+            'lightgbm': LGBMClassifier,
+            'xgboost': XGBClassifier
+        }
+        # hyperparametres des modeles
+        params = {
+            'catboost': self.catboost_parameters,
+            'lightgbm': self.lightgbm_parameters,
+            'xgboost': self.xgboost_parameters
+        }
 
-        if 'lightgbm' in self.models_to_use:
-            self.lightgbm_model = LGBMClassifier(n_estimators=500, learning_rate=0.1, max_depth=6, random_state=self.random_state)
-            self.lightgbm_model.fit(X, y)
+        # entrainement des GBMs
+        for model_name in self.models_to_use:
+            model = model_classes[model_name](**params[model_name], random_state=self.random_state)
+            model.fit(X, y)
+            self.models[model_name] = model
 
-        if 'xgboost' in self.models_to_use:
-            self.xgboost_model = XGBClassifier(n_estimators=500, learning_rate=0.1, max_depth=6, use_label_encoder=False, eval_metric='mlogloss', random_state=self.random_state)
-            self.xgboost_model.fit(X, y)
-        
-        # generate meta features
+        # récupération des probas comme features du metaclassifier
         meta_features = self._generate_meta_features(X)
-        
-        # fit the meta-classifier (softmax layer)
-        self.meta_classifier = LogisticRegression(multi_class='multinomial', random_state=self.random_state)
+
+        # fit du metaclassifier
         self.meta_classifier.fit(meta_features, y)
-        
         return self
 
     def predict(self, X):
         X = check_array(X)
         meta_features = self._generate_meta_features(X)
         return self.meta_classifier.predict(meta_features)
-    
+
     def predict_proba(self, X):
         X = check_array(X)
         meta_features = self._generate_meta_features(X)
         return self.meta_classifier.predict_proba(meta_features)
-    
+
     def _generate_meta_features(self, X):
-        meta_features = []
-        
-        # generate meta features from the probas predicted by the GBM models
-        if self.catboost_model is not None:
-            meta_features.append(self.catboost_model.predict_proba(X))
-        
-        if self.lightgbm_model is not None:
-            meta_features.append(self.lightgbm_model.predict_proba(X))
-    
-        if self.xgboost_model is not None:
-            meta_features.append(self.xgboost_model.predict_proba(X))
-        
+        meta_features = [model.predict_proba(X) for model in self.models.values()]
         return np.hstack(meta_features)
 
 
 if __name__ == '__main__':
     
-    df = pd.read_csv("data/df_labeled.csv")
+    # test sur une série labélisée
+    df = pd.read_csv("data/AAPL_df_labeled_test.csv")
     
-    # temporaire
+    # renommage du label bail de -1 à 2 pour être compatible avec le modèle
     df[df['label'] == -1]  = 2
 
-    GBM_stacking = GBMStacking(models_to_use=('catboost', 'xgboost','lightbgm'))
-    GBM_stacking.fit(df[['lower_barrier_price', 'upper_barrier_price']], df['label'])
-    predictions = GBM_stacking.predict(df[['lower_barrier_price', 'upper_barrier_price']])
+    X = df[['lower_barrier_price', 'upper_barrier_price']]
+    y = df['label']
     
+    gbm_stacking_model = GBMStacking(models_to_use=('catboost', 'lightgbm', 'xgboost'),
+                                 catboost_parameters={'iterations': 100, 'learning_rate': 0.1, 'depth': 3},
+                                 lightgbm_parameters={'n_estimators': 100, 'learning_rate': 0.1, 'max_depth': 3},
+                                 xgboost_parameters={'n_estimators': 100, 'learning_rate': 0.1, 'max_depth': 3},
+                                logistic_regression_parameters={'C': 1.0, 'penalty': 'l2', 'multi_class': 'multinomial', 'solver': 'lbfgs'})
+    gbm_stacking_model.fit(X, y)
+    predictions = gbm_stacking_model.predict(X)

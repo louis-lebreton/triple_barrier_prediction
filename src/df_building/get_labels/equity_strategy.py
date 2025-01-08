@@ -1,4 +1,5 @@
 """
+@author: Louis Lebreton
 Equity Strategy
 """
 
@@ -8,8 +9,8 @@ from dataclasses import dataclass, field
 @dataclass
 class EquityStrategy:
     """
-    This class models an equity trading strategy that simulates buying and selling of shares over time. 
-    It evaluates the performance of the strategy based on profit and maximum drawdown. 
+    this class models an equity trading strategy that simulates buying and selling of shares over time
+    It evaluates the performance of the strategy based on profit and maximum drawdown
 
     Attributes:
         buy_number: number of shares to buy when a buy signal is encountered
@@ -22,9 +23,9 @@ class EquityStrategy:
     """
     buy_number: int = 1
     sell_number: int = 1
-    cash: int = 100000
+    cash: float = 100
     shares: int = 0
-    transaction_fee: float = 10.0  # transaction fee per buy/sell
+    transaction_fee: float = 0.1  # transaction fee per buy/sell
     equity_curve: pd.Series = field(default_factory=pd.Series)
     df: pd.DataFrame = field(default=None)
 

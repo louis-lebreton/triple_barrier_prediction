@@ -6,4 +6,4 @@ src/labeling/.venv_labeling
 src/labeling/.venv_predict
 catboost_info/
 .env
-TDL.txt
+data/
