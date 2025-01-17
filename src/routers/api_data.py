@@ -1,19 +1,20 @@
 """
 @author: Louis Lebreton
 
+Endpoints pour récupérer :
+Données économiques traitées
+Données Bitcoin traitées
 """
-from fastapi import FastAPI, Query
-from pydantic import BaseModel
-import pandas as pd
 import os
-from datetime import datetime
-from typing import List, Optional
+
+import pandas as pd
+from fastapi import APIRouter, Query
 
 from src.services.df_building.get_data_API import get_economic_data, get_BTC_data
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get("/economic-data")
+@router.get("/economic-data")
 def fetch_economic_data(
     start_date: str = Query(..., description="Date de début au format YYYY-MM-DD"),
     end_date: str = Query(..., description="Date de fin au format YYYY-MM-DD")):
@@ -51,15 +52,15 @@ def fetch_economic_data(
     except Exception as e:
         return {"error": str(e)}
 
-@app.get("/bitcoin-data")
+
+@router.get("/bitcoin-data")
 def fetch_btc_data(days: int = Query(..., description="days")):
     """
     Endpoint pour obtenir les données Bitcoin traitées
     """
-
     try:
         df_btc = get_BTC_data(days = days, interval = 'daily')
-
+        
         # pct_change
         df_btc["increase_volume"] = (df_btc["volume"] - df_btc["volume"].shift(1)) / df_btc["volume"].shift(1)
         df_btc["increase_market_cap"] = (df_btc["market_cap"] - df_btc["market_cap"].shift(1)) / df_btc["market_cap"].shift(1)
@@ -88,10 +89,12 @@ def fetch_btc_data(days: int = Query(..., description="days")):
         # date en index
         df_btc.index = df_btc['date']
         df_btc.drop(columns=['date'], inplace=True)
-        df_btc.dropna(inplace=True) 
+        df_btc = df_btc.fillna(0)
+        
         # conversion en dict JSON
         result = df_btc.reset_index().to_dict(orient='records')
         return result
 
     except Exception as e:
         return {"error": str(e)}
+    

@@ -1,14 +1,15 @@
 """
 @author: Louis Lebreton
 
+Endpoint de Health Check
 """
-from fastapi import FastAPI
+from fastapi import APIRouter
 from datetime import datetime
 import os
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get("/health")
+@router.get("/health")
 def health_check():
     """
     Health Check Endpoint

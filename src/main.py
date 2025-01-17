@@ -1,16 +1,16 @@
 """
 @author: Louis Lebreton
 
+Serveur API REST qui expose plusieurs endpoints.
 """
-
 from fastapi import FastAPI
-from src.routers import index, health, get_api_data, get_tweets, predict
+from src.routers import index, health, predict, api_data, tweets
 
 app = FastAPI()
 
 # routers
-app.include_router(index.router, prefix="/api", tags=["Index"])
-app.include_router(health.router, prefix="/api", tags=["Health"])
-app.include_router(get_api_data.router, prefix="/api", tags=["Economic data", "Bitcoin data"])
-app.include_router(get_tweets.router, prefix="/api", tags=["Scrape tweets", "Convert tweets to scores"])
-app.include_router(predict.router, prefix="/api", tags=["Predict"])
+app.include_router(index.router, tags=["Index"])
+app.include_router(health.router, tags=["Health"])
+app.include_router(api_data.router, tags=["Economic & Bitcoin data"])
+app.include_router(tweets.router, tags=["Scrape tweets"])
+app.include_router(predict.router, tags=["Predict"])

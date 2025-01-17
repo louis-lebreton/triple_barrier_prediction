@@ -13,7 +13,7 @@ def get_BTC_data(days:int = 30, interval:str = 'daily') -> pd.DataFrame:
     récupération des données BTC depuis API Coingecko
     Args :
     - days (int): nombre de jours à récupérer
-    - interval(str): intervalle
+    - interval(str): intervalle des données
     Return:
     - df (pd.DataFrame)
     """

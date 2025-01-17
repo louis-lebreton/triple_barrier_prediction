@@ -1,48 +1,57 @@
 """
 @author: Louis Lebreton
-
+Index endpoint
 """
-from fastapi import FastAPI
+from fastapi import APIRouter
 from datetime import datetime
 
-app = FastAPI()
+router = APIRouter()
 
-@app.get("/")
+@router.get("/")
 def index():
     """
-    Index Endpoint
-    Purpose: Brief explanation of the application’s purpose and capabilities.
-             Provide API documentation link and available endpoints.
+    Index endpoint
+    explication de l’objectif de l’application.
+    Documentation de l’API et de ses endpoints
     """
     try:
-        # Application description
         description = {
-            "application_name": "Economic Data API",
-            "purpose": "Provide economic and financial data metrics through easy-to-use API endpoints.",
+            "application_name": "Projet Quantitative Finance",
+            "purpose": "API permettant de faciliter le lancement de certains modules du projet",
             "capabilities": [
                 "Fetch processed economic data",
                 "Monitor system health",
+                "Fetch Bitcoin & economic data",
+                "Predict financial trends",
+                "Convert tweets to sentiment score",
                 "Access API documentation"
             ],
             "api_documentation": "/docs",
             "available_endpoints": [
                 {
                     "path": "/",
-                    "description": "Index Endpoint providing overview of the API."
+                    "description": "Index Endpoint providing overview of the API"
                 },
                 {
                     "path": "/health",
-                    "description": "Monitor API availability and system status."
+                    "description": "Monitor API availability and system status"
                 },
                 {
                     "path": "/economic-data",
-                    "description": "Fetch processed economic data with start_date and end_date."
+                    "description": "Fetch processed economic data with start_date and end_date"
                 },
                 {
                     "path": "/bitcoin-data",
-                    "description": "Fetch processed bitcoin data with days."
+                    "description": "Fetch processed Bitcoin data with days"
                 },
-                
+                {
+                    "path": "/predict",
+                    "description": "Predict financial signal using GBM stacking model based on data"
+                },
+                {
+                    "path": "/scrape-tweets",
+                    "description": "Scrape tweets X accounts"
+                }
             ],
             "timestamp": datetime.utcnow().isoformat()
         }

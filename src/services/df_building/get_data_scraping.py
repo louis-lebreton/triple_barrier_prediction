@@ -34,9 +34,9 @@ def tweets_parser(tweet_divs: list, tweets_scrap_dict:dict, tweets_data: list) -
     Return (tuple) : 
         tweets_data (list) : Liste des données de tweets parsées
         tweets_scrap_dict (dict) : Dernier dictionnaire de données de tweet extrait
-        timestamp (str) : date du dernier tweet extrait
     """
     for tweet in tweet_divs:
+        
         try:
             # non prise en compte du tweet epingle
             social_context = tweet.find('div', {'data-testid': 'socialContext'})
@@ -70,7 +70,7 @@ def tweets_parser(tweet_divs: list, tweets_scrap_dict:dict, tweets_data: list) -
             print(f'{account}: tweet at {timestamp}: erreur {e}')
             continue
 
-    return tweets_data, tweets_scrap_dict, timestamp
+    return tweets_data, tweets_scrap_dict
 
 def scrape_tweets_one_account(username, password, account, since_date, until_date, driver)-> None:
     """
@@ -115,6 +115,7 @@ def scrape_tweets_one_account(username, password, account, since_date, until_dat
 
         since_date_str = str(since_date).split(' ')[0]
         until_date_str = str(until_date).split(' ')[0]
+        last_tweet_date_str = until_date_str
 
         while since_date_str != until_date_str:
             # target url (account + intervalle de date)
@@ -141,7 +142,7 @@ def scrape_tweets_one_account(username, password, account, since_date, until_dat
                 # find tweet
                 tweet_divs = soup.find_all('article', {'role': 'article'})
                 # tweet parsing
-                tweets_data, tweets_scrap_dict, timestamp = tweets_parser(tweet_divs, tweets_scrap_dict, tweets_data)
+                tweets_data, tweets_scrap_dict = tweets_parser(tweet_divs, tweets_scrap_dict, tweets_data)
                     
                 # smooth scrolling : pour passer à la 'page' suivante par itération random
                 for _ in range(5):
@@ -157,17 +158,17 @@ def scrape_tweets_one_account(username, password, account, since_date, until_dat
 
                     # df sans duplicates car risque de tweets plusieurs fois scrapés
                     tweets_df = pd.DataFrame(tweets_data).drop_duplicates('tweet_text', keep='last')
-                    tweet_date_str = str(timestamp)[:10]
-
+                    if not tweets_df.empty:
+                        last_tweet_date_str = tweets_df['timestamp'].iloc[-1][:10]
+                        until_date_str = last_tweet_date_str
+                    
                     # export dans un folder
                     output_dir = f"data/tweets/{account}"
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
-                    print(f'{account}: export du df dans {output_dir}/tweets_data_{account}_{tweet_date_str}_{until_date_str}.csv')
-                    tweets_df.to_csv(f'{output_dir}/tweets_data_{account}_{tweet_date_str}_{until_date_str}.csv', index=False)
+                    print(f'{account}: export du df dans {output_dir}/tweets_data_{account}_{last_tweet_date_str}_{until_date_str}.csv')
+                    tweets_df.to_csv(f'{output_dir}/tweets_data_{account}_{last_tweet_date_str}_{until_date_str}.csv', index=False)
 
-                    until_date_str = tweet_date_str
-                
                 previous_tweets_scrap_dict = tweets_scrap_dict
 
         driver.quit()
@@ -185,15 +186,12 @@ if __name__ == "__main__":
     PASSWORD = os.getenv('PASSWORD')
 
     # intervalle à scraper
-    since_date = datetime.strptime("2024-01-01", "%Y-%m-%d")
+    since_date = datetime.strptime("2023-01-01", "%Y-%m-%d")
     until_date = datetime.strptime("2025-01-01", "%Y-%m-%d")
     
     # comptes X à scraper
-    # accounts_list = ["documentingbtc", "100trillionUSD", "CoinDesk", "saylor", "scottmelker",
-    #                  "woonomic", "LynAldenContact", "PrestonPysh", "PeterLBrandt", "rektcapital"]
+    accounts_list = ["saylor", "LynAldenContact", "woonomic", "documentingbtc", "100trillionUSD" ]
 
-    accounts_list = ["documentingbtc", "100trillionUSD", "CoinDesk", "saylor", "scottmelker"]
-    
     options = Options()
     options.add_argument('--ignore-certificate-errors')
     options.add_argument('--ignore-ssl-errors')
