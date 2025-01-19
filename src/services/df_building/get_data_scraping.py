@@ -166,8 +166,8 @@ def scrape_tweets_one_account(username, password, account, since_date, until_dat
                     output_dir = f"data/tweets/{account}"
                     if not os.path.exists(output_dir):
                         os.makedirs(output_dir)
-                    print(f'{account}: export du df dans {output_dir}/tweets_data_{account}_{last_tweet_date_str}_{until_date_str}.csv')
-                    tweets_df.to_csv(f'{output_dir}/tweets_data_{account}_{last_tweet_date_str}_{until_date_str}.csv', index=False)
+                    print(f'{account}: export du df dans {output_dir}/tweets_data_{account}_{last_tweet_date_str}.csv')
+                    tweets_df.to_csv(f'{output_dir}/tweets_data_{account}_{last_tweet_date_str}.csv', index=False)
 
                 previous_tweets_scrap_dict = tweets_scrap_dict
 
@@ -186,11 +186,11 @@ if __name__ == "__main__":
     PASSWORD = os.getenv('PASSWORD')
 
     # intervalle à scraper
-    since_date = datetime.strptime("2023-01-01", "%Y-%m-%d")
-    until_date = datetime.strptime("2025-01-01", "%Y-%m-%d")
-    
+    since_date = datetime.strptime("2018-01-01", "%Y-%m-%d")
+    until_date = datetime.strptime("2019-08-10", "%Y-%m-%d")
+
     # comptes X à scraper
-    accounts_list = ["saylor", "LynAldenContact", "woonomic", "documentingbtc", "100trillionUSD" ]
+    accounts_list = ["woonomic", "100trillionUSD", "saylor", "documentingbtc", "LynAldenContact"]
 
     options = Options()
     options.add_argument('--ignore-certificate-errors')
@@ -200,8 +200,8 @@ if __name__ == "__main__":
     # options.add_argument("--headless")
 
     # parallelisation
-    with ThreadPoolExecutor(max_workers=5) as executor:
+    with ThreadPoolExecutor(max_workers=2) as executor:
         for account in accounts_list:
-            
             driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
             executor.submit(scrape_tweets_one_account, LOGIN, PASSWORD, account, since_date, until_date, driver)
+

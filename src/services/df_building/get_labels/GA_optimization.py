@@ -25,7 +25,7 @@ def evaluate_individual(individual, weight_p: float, weight_mdd: float, target_p
     lower_barrier, upper_barrier, time_barrier, buy_number, sell_number = individual 
     
     # constraints
-    if -0.5 < lower_barrier < 0 and 0 < upper_barrier < 0.5 and 0 < buy_number < 0.001 and 0 < sell_number < 0.001 and 1 < time_barrier < 1000:
+    if -0.5 < lower_barrier < 0 and 0 < upper_barrier < 0.5 and 0 < buy_number < 0.001 and 0 < sell_number < 0.001 and 1 < time_barrier < 180:
     
         # label using TBM
         tbm = TripleBarrierMethod(target_price, lower_barrier=lower_barrier, upper_barrier=upper_barrier, time_barrier=int(time_barrier))
@@ -64,15 +64,14 @@ def run_genetic_algorithm(toolbox, population_size, nb_gen, crossover, mutation)
         # evaluate individuals and assign fitness
         for fit, ind in zip(fits, offspring):
             ind.fitness.values = fit
-            print(f"Individual: {np.round(np.array(ind), 2)}, Fitness: {np.round(fit, 2)}")
-        
+       
         # next generation
         population = toolbox.select(offspring, k=population_size)
 
         # the best individual of the generation
         best_individual = tools.selBest(population, k=1)[0]
         best_fitness = best_individual.fitness.values[0]
-        print(f"\nBest individual of generation {generation + 1}: {np.round(np.array(best_individual), 2)}")
+        print(f"\nBest individual of generation {generation + 1}: {np.array(best_individual)}")
         print(f"Best fitness of generation {generation + 1}: {np.round(best_fitness, 2)}")
 
     # best individual and its fitness
@@ -98,7 +97,7 @@ if __name__ == '__main__':
     # defining constraints
     toolbox.register("attr_lower_barrier", random.uniform, -0.5, 0)
     toolbox.register("attr_upper_barrier", random.uniform, 0, 0.5)
-    toolbox.register("attr_time_barrier", random.randint, 1, 1000)
+    toolbox.register("attr_time_barrier", random.randint, 1, 180)
     toolbox.register("attr_buy_number", random.uniform, 0, 0.001)
     toolbox.register("attr_sell_number", random.uniform, 0, 0.001)
 

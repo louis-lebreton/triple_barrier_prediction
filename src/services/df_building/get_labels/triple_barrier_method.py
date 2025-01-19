@@ -2,7 +2,6 @@
 @author: Louis Lebreton
 Triple-barrier method
 """
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -105,9 +104,9 @@ class TripleBarrierMethod:
         ax.set_title(title)
 
         legend_labels = [
-            mlines.Line2D([], [], color='#ff0000', marker='o', linestyle='None', markersize=10, label='Label -1'),
-            mlines.Line2D([], [], color='#7945d9', marker='o', linestyle='None', markersize=10, label='Label 0'),
-            mlines.Line2D([], [], color='#0fff00', marker='o', linestyle='None', markersize=10, label='Label 1')
+            mlines.Line2D([], [], color='#ff0000', marker='o', linestyle='None', markersize=10, label='Sell'),
+            mlines.Line2D([], [], color='#7945d9', marker='o', linestyle='None', markersize=10, label='Hold'),
+            mlines.Line2D([], [], color='#0fff00', marker='o', linestyle='None', markersize=10, label='Buy')
         ]
 
         ax.legend(handles=legend_labels, title='Labels')
@@ -159,7 +158,7 @@ if __name__ == '__main__':
     # barrier settings
     lower_barrier = -0.10
     upper_barrier = 0.10
-    time_barrier = 20
+    time_barrier = 40
     tbm = TripleBarrierMethod(target_price, lower_barrier=lower_barrier, upper_barrier=upper_barrier, time_barrier=time_barrier)
     df_labeled = tbm.label_data()
     tbm.plot_labels(colors=['#ff0000', '#7945d9', '#0fff00'], title='Labeled Price Data')

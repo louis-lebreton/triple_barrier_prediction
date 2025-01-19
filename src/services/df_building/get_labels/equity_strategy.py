@@ -2,7 +2,7 @@
 @author: Louis Lebreton
 Equity Strategy
 """
-
+import numpy as np
 import pandas as pd
 from dataclasses import dataclass, field
 
@@ -50,17 +50,18 @@ class EquityStrategy:
 
         for index, row in self.df.iterrows():
             
-            if self.dca_strategy:
-                shares += self.dca_cash / row['target_price'] # if DCA: number of shares chosen according the target price
-
             if row['label'] == 1 and cash > 0:
                 # buy x share
-                shares += self.buy_number
-                cash -= (row['target_price'] * self.buy_number) + self.transaction_fee
+                if self.dca_strategy:
+                    shares += (self.dca_cash / row['target_price']) # if DCA: number of shares chosen according the target price
+                    cash -= (self.dca_cash + self.transaction_fee)
+                else:
+                    shares += self.buy_number
+                    cash -= ((row['target_price'] * self.buy_number) + self.transaction_fee)
             elif row['label'] == -1 and shares > 0:
                 # sell x share
                 shares -= self.sell_number
-                cash += (row['target_price'] * self.sell_number) - self.transaction_fee
+                cash += ((row['target_price'] * self.sell_number) - self.transaction_fee)
 
             # calculate current equity value
             equity = cash + (shares * row['target_price'])
@@ -100,11 +101,11 @@ class EquityStrategy:
         mdd = self.calculate_maximum_drawdown()
         return weight_p * profit - weight_mdd * mdd
     
-    def calculate_sharpe_ratio(self, risk_free_rate: float = 0.0) -> float:
+    def calculate_sharpe_ratio(self, annual_risk_free_rate: float = 0.0) -> float:
         """
         Calculates the sharpe ratio of the strategy
 
-        :param risk_free_rate: risk-free rate used in the sharpe ratio calculation (default is 0.0).
+        :param annual_risk_free_rate: risk-free rate used in the sharpe ratio calculation (default is 0.0).
         :return: sharpe ratio value
         """
        
@@ -115,5 +116,16 @@ class EquityStrategy:
         if std_dev_return == 0:
             return 0.0 
 
-        sharpe_ratio = (mean_return - risk_free_rate) / std_dev_return
-        return sharpe_ratio
+        daily_risk_free_rate = annual_risk_free_rate / 365
+
+        sharpe_ratio_annualized = ((mean_return - daily_risk_free_rate) 
+                                / std_dev_return) * np.sqrt(365)
+        return sharpe_ratio_annualized
+
+if __name__ == '__main__':
+
+    df_tbm_trading_strategy = pd.read_csv('data/df_tbm_trading_strategy.csv')
+    predicted_labels_equity_strategy = EquityStrategy(df=df_tbm_trading_strategy, 
+                                     buy_number=0.001,
+                                     sell_number=0.0009, 
+                                     cash = 100)

@@ -40,7 +40,7 @@ class GBMStacking(BaseEstimator, ClassifierMixin):
         self.classes_ = None
 
     def fit(self, X, y):
-        X, y = check_X_y(X, y)
+        # X, y = check_X_y(X, y,  force_all_finite=False)
         self.classes_ = np.unique(y)
         # modeles
         model_classes = {
@@ -69,12 +69,12 @@ class GBMStacking(BaseEstimator, ClassifierMixin):
         return self
 
     def predict(self, X):
-        X = check_array(X)
+        # X = check_array(X,  force_all_finite=False)
         meta_features = self._generate_meta_features(X)
         return self.meta_classifier.predict(meta_features)
 
     def predict_proba(self, X):
-        X = check_array(X)
+        # X = check_array(X,  force_all_finite=False)
         meta_features = self._generate_meta_features(X)
         return self.meta_classifier.predict_proba(meta_features)
 
