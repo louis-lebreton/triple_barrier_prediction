@@ -1,7 +1,7 @@
 """
 @author: Louis Lebreton
 
-Serveur API REST qui expose plusieurs endpoints.
+Serveur API REST qui expose plusieurs endpoints
 """
 from fastapi import FastAPI
 from src.routers import index, health, predict, api_data, tweets

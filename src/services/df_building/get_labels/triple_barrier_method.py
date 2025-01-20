@@ -15,7 +15,7 @@ class TripleBarrierMethod:
     implements the Triple Barrier Method for labeling financial time series data.
 
     hit an upper barrier (label = 1), a lower barrier (label = -1), or neither (label = 0) 
-    within a specified time frame.
+    within a specified time frame
 
     Attributes:
         target_price (pd.Series): time series of target prices to analyze

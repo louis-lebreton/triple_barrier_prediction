@@ -103,7 +103,7 @@ class EquityStrategy:
     
     def calculate_sharpe_ratio(self, annual_risk_free_rate: float = 0.0) -> float:
         """
-        Calculates the sharpe ratio of the strategy
+        calculates the sharpe ratio of the strategy
 
         :param annual_risk_free_rate: risk-free rate used in the sharpe ratio calculation (default is 0.0).
         :return: sharpe ratio value
