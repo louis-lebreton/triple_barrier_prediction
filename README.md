@@ -6,23 +6,22 @@ Le labeling est appliqué aux données **Bitcoin**, générant trois catégories
 Une fois l'ensemble de données labélisées construit, j'utilise un modèle de classification pour prédire les signaux à partir de données agrégées. En intégrant
 des variables macroéconomiques, des scores de sentiment déduits des tweets à l'aide d'un
 modèle BERTweet et des mesures spécifiques au Bitcoin, j'utilise un
-modèle de **Stacking** combinant **3 GBMs (XGBoost, Light-GBM, CatBoost)** avec un meta-classifier **Softmax**. Les hyperparamètres de ces modèles sont optimisés via **optimisation Bayésienne**.
+modèle de **Stacking** combinant **3 GBMs (XGBoost, Light-GBM, CatBoost)** avec un meta-classifier **Softmax**. Les hyperparamètres de ces modèles sont optimisés via **Optimisation Bayésienne**.
 Les décisions de trading dérivées de ces prédictions sont évaluées à l'aide de métriques de performance financière telles que le **profit**, **le maximum drawdown** et le **Sharpe ratio**,
 et sont comparées à des approches d'investissement plus traditionnelles telles que le simple Hold et le DCA (Dollars Cost Averaging).
 
-## 📂 Contenu du projet  
+## 📂 Structure du projet  
 
 ### 🔹 **Notebooks Jupyter**  
 - **`df_builder.ipynb`** : Construction des datasets d'entraînement et de test à partir des données disponibles.  
-- **`predict.ipynb`** :  
-  - Entraînement du modèle de prédiction  
-  - Génération des prévisions  
-  - Évaluation de la stratégie de trading  
+- **`predict.ipynb`** :  Entraînement du modèle de prédiction, génération des prévisions, comparaison des stratégies de trading  
 
 ### 🔹 **Script FastAPI**  
-- **`main.py`** : Implémente une API basée sur **FastAPI** pour exposer le modèle et permettre des interactions externes.  
+- **`main.py`** : Déniti une API **FastAPI** pour intéragir avec différentes composantes du projet.  
+
 
 ## 🚀 Installation & Exécution  
+
 ### 📌 Prérequis  
 - Python 3.8+  
 - Jupyter Notebook  
@@ -30,6 +29,29 @@ et sont comparées à des approches d'investissement plus traditionnelles telles
 - pip ou conda pour la gestion des packages  
 
 ### 📥 Installation des dépendances  
-Exécutez la commande suivante pour installer les dépendances nécessaires :  
+
+Clone the repository  
+```bash
+git clone https://github.com/louis-lebreton/triple_barrier_prediction.git
+```
+
+#### Create and activate a virtual environment:  
+
+For Windows users:  
+```bash
+python -m venv venv
+.\venv\Scripts\activate
+```
+
+For Mac/Linux users:  
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+#### Install the required dependencies:  
 ```bash
 pip install -r requirements.txt
+```
+
+
