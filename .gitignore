@@ -6,4 +6,6 @@ src/labeling/.venv_labeling
 src/labeling/.venv_predict
 catboost_info/
 .env
-data/
+data/*
+!data/.gitkeep
+!data/tweets/.gitkeep
