@@ -35,23 +35,23 @@ Clone the repository
 git clone https://github.com/louis-lebreton/triple_barrier_prediction.git
 ```
 
-#### Create and activate a virtual environment:  
+Installation des dépendances
+Clonez le dépôt :
 
-For Windows users:  
 ```bash
-python -m venv venv
-.\venv\Scripts\activate
+git clone https://github.com/louis-lebreton/triple_barrier_prediction.git
+cd triple_barrier_prediction
+```
+Assurez-vous d'avoir Poetry installé. Si ce n'est pas le cas, installez-le avec :
+
+```bash
+pip install poetry
+```
+Créez et activez l'environnement virtuel, puis installez les dépendances :
+
+```bash
+poetry install
 ```
 
-For Mac/Linux users:  
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
-
-#### Install the required dependencies:  
-```bash
-pip install -r requirements.txt
-```
 
 
