@@ -1,5 +1,9 @@
 # 📈 Projet de Finance Quantitative – Genetic Algorithm-Optimized Triple Barrier Labeling for Bitcoin Trading Based on GBMs Stacking Prediction
 
+<p align="center">
+<img src="triple_barrier_method.png" alt="triple_barrier_method" width="450"/>
+</p>
+
 ## 📝 Description  
 Ce projet explore l'application d'une méthode de labeling **Triple Barrier** introduite en 2018 par Marcos Lopez de Prado. Celle-ci est optimisée à l'aide d'un **Algorithme Génétique** pour maximiser les performances financières.
 Le labeling est appliqué aux données **Bitcoin**, générant trois catégories de signaux : Buy, Hold et Sell.
