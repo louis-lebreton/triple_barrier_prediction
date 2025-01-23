@@ -53,6 +53,12 @@ Créez et activez l'environnement virtuel, puis installez les dépendances :
 ```bash
 poetry install
 ```
+Lancement de l'API :
+
+```bash
+uvicorn src.main:app --reload
+```
+
 
 
 
