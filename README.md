@@ -13,22 +13,19 @@ et sont comparées à des approches d'investissement plus traditionnelles telles
 ## 📂 Structure du projet  
 
 ### 🔹 **Notebooks Jupyter**  
-- **`df_builder.ipynb`** : Construction des datasets d'entraînement et de test à partir des données disponibles.  
+- **`df_builder.ipynb`** : Construction des datasets d'entraînement et de test à partir des données disponibles
 - **`predict.ipynb`** :  Entraînement du modèle de prédiction, génération des prévisions, comparaison des stratégies de trading  
 
 ### 🔹 **Script FastAPI**  
-- **`main.py`** : Déniti une API **FastAPI** pour intéragir avec différentes composantes du projet.  
+- **`main.py`** : Définit une API **FastAPI** pour intéragir avec différentes composantes du projet
+
+### 🔹 **Folders**  
+- **`services/df_building`** : Folder des modules du df_builder.ipynb
+- **`services/prediction`** : Folder des modules de predict.ipynb
+- **`routers/`** : Folder des routers de l'API
 
 
-## 🚀 Installation & Exécution  
-
-### 📌 Prérequis  
-- Python 3.8+  
-- Jupyter Notebook  
-- FastAPI  
-- pip ou conda pour la gestion des packages  
-
-### 📥 Installation des dépendances  
+## 🚀 Installation & Exécution
 
 Clone the repository  
 ```bash
