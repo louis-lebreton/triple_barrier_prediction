@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "scripts"
+version = "0.1.0"
+description = ""
+authors = ["louis_lebreton <lebretonlouis@outlook.fr>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pandas = "^2.2.3"
+deap = "^1.4.1"
+matplotlib = "^3.9.2"
+xgboost = "^2.1.2"
+lightgbm = "^4.5.0"
+catboost = "^1.2.7"
+scikit-learn = "^1.5.2"
+beautifulsoup4 = "^4.12.3"
+selenium = "^4.26.1"
+webdriver-manager = "^4.0.2"
+transformers = "^4.47.1"
+torch = "^2.5.1"
+emoji = "^2.14.0"
+bayesian-optimization = "^2.0.3"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+yfinance = "^0.2.52"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
