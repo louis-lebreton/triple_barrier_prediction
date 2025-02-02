@@ -65,7 +65,7 @@ def predict(
 
     # prediction
     try:
-        predictions = gbm_stacking_model.predict(data_filtered)
+        predictions = gbm_stacking_model.predict(data_filtered.drop(columns=['label']))
         return predictions.tolist()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Erreur lors de la prédiction : {e}")

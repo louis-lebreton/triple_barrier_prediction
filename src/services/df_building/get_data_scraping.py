@@ -21,7 +21,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 
 
-def tweets_parser(tweet_divs: list, tweets_scrap_dict:dict, tweets_data: list) -> tuple:
+def tweets_parser(tweet_divs: list, tweets_scrap_dict:dict, tweets_data: list, account:str) -> tuple:
     """
     parsing de tweets à partir des balises html
 
@@ -142,7 +142,7 @@ def scrape_tweets_one_account(username, password, account, since_date, until_dat
                 # find tweet
                 tweet_divs = soup.find_all('article', {'role': 'article'})
                 # tweet parsing
-                tweets_data, tweets_scrap_dict = tweets_parser(tweet_divs, tweets_scrap_dict, tweets_data)
+                tweets_data, tweets_scrap_dict = tweets_parser(tweet_divs, tweets_scrap_dict, tweets_data, account)
                     
                 # smooth scrolling : pour passer à la 'page' suivante par itération random
                 for _ in range(5):

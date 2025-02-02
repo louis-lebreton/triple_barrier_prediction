@@ -54,7 +54,7 @@ def fetch_economic_data(
 
 
 @router.get("/bitcoin-data")
-def fetch_btc_data(days: int = Query(..., description="days")):
+def fetch_btc_data(days: int = Query(..., description="days (must be less than 365 days)")):
     """
     Endpoint pour obtenir les données Bitcoin traitées
     """
